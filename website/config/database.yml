@@ -10,6 +10,8 @@ default: &default
   timeout: 5000
 
 development:
+  host: 59.66.132.180
+  port: 6017
   adapter: mysql2
   encoding: utf8
   database: SDBoxDB

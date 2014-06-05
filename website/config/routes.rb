@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :contacts
 
   get 'platforms/get' => 'platforms#get'
+  get 'platforms/list' => 'platforms#list'
 
   resources :platforms
 
@@ -17,7 +18,12 @@ Rails.application.routes.draw do
   
   resources :users
 
-  root 'users#main'
+  get 'receive/test' => 'platform_test#receive'
+  get 'bind/test' => 'platform_test#bind'
+  
+  get 'receive/:id' => 'main#receive'
+
+  root 'main#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
