@@ -1,0 +1,59 @@
+html lang="zh-cn" 
+  head
+    meta charset="utf-8" 
+    meta content="IE=edge" http-equiv="X-UA-Compatible" 
+    meta content="width=device-width, initial-scale=1.0" name="viewport" 
+    meta content="" name="description" 
+    meta content="" name="author" 
+    title Starter Template for Bootstrap
+    /! Bootstrap core CSS
+    link href="/assets/bootstrap.css" rel="stylesheet" 
+    /! Custom styles for this template
+    link href="/assets/starter-template.css" rel="stylesheet" 
+    /! Just for debugging purposes. Don't actually copy this line!
+    /![if lt IE 9] <script src="assets/ie8-responsive-file-warning.js"></script>
+    /! HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+    /![if lt IE 9]
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+  body
+    h1
+      | Hello, 
+      = @user.name
+    .dropdown
+      a data-toggle="dropdown" href="#" 用户数据
+      ul.dropdown-menu aria-labelledby="dLable" role="menu"
+        li
+          a = link_to '全部数据', '/users/get_all.json'
+        li
+          a = link_to '平台数据', '/platforms/get.json'
+        li
+          a = link_to '联系人数据', '/contacts/get.json'
+    .dropdown
+      a data-toggle="dropdown" href="#" 添加平台
+      ul.dropdown-menu aria-labelledby="dLable" role="menu"
+        - Platform.supported.each do |platform|
+          li
+            a = link_to platform, '/bind/' + platform
+    .dropdown
+      a data-toggle="dropdown" href="#" 获取新消息
+      ul.dropdown-menu aria-labelledby="dLable" role="menu"
+        - @user.platforms.each do |platform|
+          li
+            a = link_to platform.name + '（' + platform.kind + '）', '/receive/' + platform.id.to_s
+    .dropdown
+      a data-toggle="dropdown" href="#" 刷新联系人
+      ul.dropdown-menu aria-labelledby="dLable" role="menu"
+        - @user.platforms.each do |platform|
+          li
+            a = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
+    .dropdown
+      a data-toggle="dropdown" href="#" 发送消息
+      ul.dropdown-menu aria-labelledby="dLable" role="menu"
+        - @user.contacts.each do |contact|
+          - contact.contact_items.each do |item|
+            li
+              a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
+    script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" 
+    script src="/assets/bootstrap.min.js" 
+    script src="/assets/hello.js"

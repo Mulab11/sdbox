@@ -1,0 +1,27 @@
+h1 Listing contact_items
+
+table
+  thead
+    tr
+      th Address
+      th Name
+      th Platform
+      th Contact
+      th
+      th
+      th
+
+  tbody
+    - @contact_items.each do |contact_item|
+      tr
+        td = contact_item.address
+        td = contact_item.name
+        td = contact_item.platform_id
+        td = contact_item.contact_id
+        td = link_to 'Show', contact_item
+        td = link_to 'Edit', edit_contact_item_path(contact_item)
+        td = link_to 'Destroy', contact_item, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Contact item', new_contact_item_path

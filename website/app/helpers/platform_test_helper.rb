@@ -1,0 +1,2 @@
+module PlatformTestHelper
+end

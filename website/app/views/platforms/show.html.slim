@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Kind:
+  = @platform.kind
+p
+  strong Token:
+  = @platform.token
+p
+  strong Name:
+  = @platform.name
+p
+  strong User:
+  = @platform.user_id
+
+= link_to 'Edit', edit_platform_path(@platform)
+'|
+= link_to 'Back', platforms_path

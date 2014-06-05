@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @contact.name
+p
+  strong User:
+  = @contact.user_id
+
+= link_to 'Edit', edit_contact_path(@contact)
+'|
+= link_to 'Back', contacts_path

@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Address:
+  = @contact_item.address
+p
+  strong Name:
+  = @contact_item.name
+p
+  strong Platform:
+  = @contact_item.platform_id
+p
+  strong Contact:
+  = @contact_item.contact_id
+
+= link_to 'Edit', edit_contact_item_path(@contact_item)
+'|
+= link_to 'Back', contact_items_path
