@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140421005505) do
+ActiveRecord::Schema.define(version: 20140421153836) do
 
   create_table "contact_items", force: true do |t|
     t.string   "address",     null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20140421005505) do
 
   create_table "platforms", force: true do |t|
     t.string   "kind",       null: false
-    t.string   "token",      null: false
+    t.string   "token"
     t.string   "name"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -39,10 +39,11 @@ ActiveRecord::Schema.define(version: 20140421005505) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "name",       null: false
-    t.string   "pwd",        null: false
+    t.string   "name",            null: false
+    t.string   "password_digest", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "admin_rank"
   end
 
 end

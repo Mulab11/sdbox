@@ -1,4 +1,24 @@
 Rails.application.routes.draw do
+  resources :contact_items
+
+  get 'contacts/get' => 'contacts#get'
+
+  resources :contacts
+
+  get 'platforms/get' => 'platforms#get'
+
+  resources :platforms
+
+  get 'users/login' => 'users#login'
+  post 'users/login' => 'users#login'
+  get 'users/login_page' => 'users#login_page'
+  get 'users/hello' => 'users#hello'
+  get 'users/get_all' => 'users#get_all'
+  
+  resources :users
+
+  root 'users#main'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
