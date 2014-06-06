@@ -18,10 +18,17 @@ Rails.application.routes.draw do
   
   resources :users
 
-  get 'receive/test' => 'platform_test#receive'
-  get 'bind/test' => 'platform_test#bind'
-  
+  Platform.supported.each do |platform|
+    get 'receive/' + platform => 'platform_' + platform + '#receive'
+    get 'bind/' + platform => 'platform_' + platform + '#bind'
+    get 'fresh/' + platform => 'platform_' + platform + '#fresh'
+    get 'send/' + platform => 'platform_' + platform + '#send_message'
+  end
+
   get 'receive/:id' => 'main#receive'
+  get 'fresh/:id' => 'main#fresh'
+  get 'send/:id' => 'main#send_page'
+  post 'send/:id' => 'main#send_message'
 
   root 'main#index'
 

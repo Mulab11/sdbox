@@ -10,9 +10,32 @@ class MainController < ApplicationController
     @user = User.find(session[:user])
   end
 
-  def receive
+  def fresh
     @platform = Platform.find(params[:id])
-    print('!!!!!!!!!!!!' + @platform.token)
-    redirect_to :controller => 'platform_' + @platform.kind, :action => 'receive', :format => 'json', :token => @platform.token
+    if @platform.user_id != session[:user]
+      return
+    end
+    redirect_to :controller => 'platform_' + @platform.kind, :action => 'fresh', :format => 'json', :platform => @platform
+  end
+
+  def receive
+    platform = Platform.find(params[:id])
+    if platform.user_id != session[:user]
+      return
+    end
+    redirect_to :controller => 'platform_' + platform.kind, :action => 'receive', :format => 'json', :platform => platform
+  end
+
+  def send_message
+    item = ContactItem.find(params[:id])
+    if item.platform.user_id != session[:user]
+      return
+    end
+    redirect_to :controller => 'platform_' + item.platform.kind, :action => 'send_message', :contact_item => item, :message => params[:message]
+  end
+
+  def send_page
+    @item = ContactItem.find(params[:id])
+    render '/main/send'
   end
 end
