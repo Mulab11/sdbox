@@ -1,0 +1,2 @@
+class PlatformWeiboController < ApplicationController
+end
