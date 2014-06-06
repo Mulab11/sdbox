@@ -20,40 +20,90 @@ html lang="zh-cn"
     h1
       | Hello, 
       = @user.name
-    .dropdown
-      a data-toggle="dropdown" href="#" 用户数据
-      ul.dropdown-menu aria-labelledby="dLable" role="menu"
-        li
-          a = link_to '全部数据', '/users/get_all.json'
-        li
-          a = link_to '平台数据', '/platforms/get.json'
-        li
-          a = link_to '联系人数据', '/contacts/get.json'
-    .dropdown
-      a data-toggle="dropdown" href="#" 添加平台
-      ul.dropdown-menu aria-labelledby="dLable" role="menu"
-        - Platform.supported.each do |platform|
+    .btn-group
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 用户数据
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
           li
-            a = link_to platform, '/bind/' + platform
-    .dropdown
-      a data-toggle="dropdown" href="#" 获取新消息
-      ul.dropdown-menu aria-labelledby="dLable" role="menu"
-        - @user.platforms.each do |platform|
+            a = link_to '全部数据', '/users/get_all.json'
           li
-            a = link_to platform.name + '（' + platform.kind + '）', '/receive/' + platform.id.to_s
-    .dropdown
-      a data-toggle="dropdown" href="#" 刷新联系人
-      ul.dropdown-menu aria-labelledby="dLable" role="menu"
-        - @user.platforms.each do |platform|
+            a = link_to '平台数据', '/platforms/get.json'
           li
-            a = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
-    .dropdown
-      a data-toggle="dropdown" href="#" 发送消息
-      ul.dropdown-menu aria-labelledby="dLable" role="menu"
-        - @user.contacts.each do |contact|
-          - contact.contact_items.each do |item|
+            a = link_to '联系人数据', '/contacts/get.json'
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 添加平台
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - Platform.supported.each do |platform|
             li
-              a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
-    script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" 
-    script src="/assets/bootstrap.min.js" 
-    script src="/assets/hello.js"
+              a = link_to platform, '/bind/' + platform
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 获取新消息
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.platforms.each do |platform|
+            li
+              a = link_to platform.name + '（' + platform.kind + '）', '/receive/' + platform.id.to_s
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 刷新联系人
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.platforms.each do |platform|
+            li
+              a = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 发送消息
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.contacts.each do |contact|
+            - contact.contact_items.each do |item|
+              li
+                a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
+    .row
+      .col-lg-6
+        .input-group
+          textarea.form-control type="text" 
+          span.input-group-btn 
+            button.btn.btn-default type="button" 发送
+    .jumbotron
+      p 这是对话框
+    .btn-group-vertical
+      - @user.contacts.each do |contact|
+        - if contact.contact_items.size == 1
+          button.btn.btn-default type="button" 
+            a tabindex="-1" = link_to contact.name, '/send/' + contact.contact_items[0].id.to_s
+        - else
+          - if contact.contact_items.size > 1
+            .btn-group.dropdown
+              button.btn.btn-default.dropdown-toggle data-toggle="dropdown" type="button"
+                | #{contact.name}
+                span.caret
+              ul.dropdown-menu aria-lableledby="dLabel" role="menu"
+                - contact.contact_items.each do |item|
+                  li
+                    a = link_to item.platform.kind, '/send/' + item.id.to_s
+
+
+    #accordion.button-group-vertical
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title
+            a data-parent="#accordion" data-toggle="collapse" href="#collapseOne"
+              | Hello
+        #collapseOne.panel-collapse.collapse.in
+          .panel-body
+            | Hello
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title
+            a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo"
+              | Hello
+        #collapseTwo.panel-collapse.collapse.in
+          .panel-body
+            | Hello
