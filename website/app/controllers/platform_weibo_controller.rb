@@ -5,7 +5,7 @@ class PlatformWeiboController < ApplicationController
   @@WEIBO_ENV = {
     'APP_ID' => '1916610325',
     'APP_SECRET' => 'ff35f64cf73286a73a55216aca965983',
-    'REDIRECT_URI' => "http://%s/access_token/weibo/"
+    'REDIRECT_URI' => 'http://0.0.0.0:4321/access_token/weibo/'
   }
   @@WEIBO_ACCESS_TOKEN = "https://api.weibo.com/oauth2/access_token"
   @@WEIBO_AUTH_URL = "https://api.weibo.com/oauth2/authorize"
@@ -16,7 +16,7 @@ class PlatformWeiboController < ApplicationController
     puts "authorize_url : %s" % authorize_url
     authorize_url << "?client_id=#{@@WEIBO_ENV["APP_ID"]}"
     authorize_url << "&response_type=code"
-    authorize_url << "&redirect_uri=#{@@WEIBO_ENV["REDIRECT_URI"] % request.host_with_port}"  
+    authorize_url << "&redirect_uri=#{@@WEIBO_ENV["REDIRECT_URI"]}"  
     puts "authorize_url : %s" % authorize_url
     redirect_to(authorize_url)
   end
