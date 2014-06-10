@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     get 'bind/' + platform => 'platform_' + platform + '#bind'
     get 'fresh/' + platform => 'platform_' + platform + '#fresh'
     get 'send/' + platform => 'platform_' + platform + '#send_message'
+    get 'access_token/' + platform => 'platform_' + platform + '#access_token'
   end
 
   get 'receive/:id' => 'main#receive'
