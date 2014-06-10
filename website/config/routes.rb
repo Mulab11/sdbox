@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :contact_items
 
   get 'contacts/get' => 'contacts#get'
+  get 'contacts/join' => 'contacts#join'
 
   resources :contacts
 

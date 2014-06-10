@@ -69,6 +69,14 @@ class ContactsController < ApplicationController
     end
   end
 
+  def join
+    @contact = Contact.find(params[:fath])
+    Contact.find(params[:son]).contact_items.each do |item|
+      @contact.join(item)
+    end
+    redirect_to '/contacts/' + @contact.id.to_s
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_contact
