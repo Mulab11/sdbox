@@ -1,0 +1,38 @@
+html lang="zh-cn" 
+  head
+    meta charset="utf-8" 
+    meta content="IE=edge" http-equiv="X-UA-Compatible" 
+    meta content="width=device-width, initial-scale=1.0" name="viewport" 
+    meta content="" name="description" 
+    meta content="" name="author" 
+    title Starter Template for Bootstrap
+    /! Bootstrap core CSS
+    link href="/assets/bootstrap.css" rel="stylesheet" 
+    /! Custom styles for this template
+    link href="/assets/starter-template.css" rel="stylesheet" 
+    /! Just for debugging purposes. Don't actually copy this line!
+    /![if lt IE 9] <script src="assets/ie8-responsive-file-warning.js"></script>
+    /! HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+    /![if lt IE 9]
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+  body
+    = form_for @platform, url: '/platforms.json' do |f|
+      .container
+        .field
+          = f.label :name
+          = f.text_field :name
+        .field
+          = f.label :token
+          = f.text_field :token
+        .field style="display:none"
+          = f.label :kind
+          = f.text_field :kind
+        .field style="display:none"
+          = f.label :user_id
+          = f.text_field :user_id
+        .action = f.submit '保存'
+
+    script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" 
+    script src="/assets/bootstrap.min.js" 
+    script src="/assets/hello.js"
