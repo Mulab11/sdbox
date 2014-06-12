@@ -4,8 +4,19 @@ class Platform < ActiveRecord::Base
   #attr_accessible :type, :token, :name, :user_id
 
   @@supp = ['test', 'renren', 'weixin', 'weibo']
+  @@chn = {
+    'test' => '测试',
+    'renren' => '人人',
+    'weixin' => '微信',
+    'weibo' => '微博'
+  }
+
   def self.supported
     @@supp
+  end
+
+  def self.chinese
+    @@chn
   end
 
   def add_items(items)

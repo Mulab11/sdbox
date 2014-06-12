@@ -63,7 +63,7 @@ html lang="zh-cn"
                       - contact.contact_items.each do |item|
                         li
                           span.tree-node.leaf-node id="#{item.id}"
-                            = item.platform.kind
+                            = Platform.chinese[item.platform.kind]
                           |   
                           = item.name
                 - else
@@ -72,7 +72,7 @@ html lang="zh-cn"
                       span.tree-node.leaf-node id="#{contact.contact_items[0].id}"
                         = contact.name
                       |  
-                      = contact.contact_items[0].platform.kind
+                      = Platform.chinese[contact.contact_items[0].platform.kind]
 
         .col-md-8
           ul.nav.nav-tabs#message-tab
