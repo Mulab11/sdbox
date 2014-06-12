@@ -17,93 +17,84 @@ html lang="zh-cn"
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
       <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
   body
-    h1
-      | Hello, 
-      = @user.name
-    .btn-group
-      .btn-group
-        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
-          | 用户数据
-          span.caret
-        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
-          li
-            a = link_to '全部数据', '/users/get_all.json'
-          li
-            a = link_to '平台数据', '/platforms/get.json'
-          li
-            a = link_to '联系人数据', '/contacts/get.json'
-      .btn-group
-        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
-          | 添加平台
-          span.caret
-        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
-          - Platform.supported.each do |platform|
+    header.navbar.navbar-inverse.navbar-fixed-top.bs-docs-nav role="banner" 
+      .container
+        .navbar-header
+          button.navbar-toggle data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" 
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand href="../"  SD-BOX
+        nav.collapse.navbar-collapse.bs-navbar-collapse role="navigation" 
+          ul.nav.navbar-nav
+            li.dropdown
+              a.dropdown-toggle data-toggle="dropdown"
+                | 添加平台
+                b.caret
+                ul.dropdown-menu
+                  - Platform.supported.each do |platform|
+                    li
+                      = link_to platform, '/bind/' + platform
+            li.dropdown
+              a.dropdown-toggle data-toggle="dropdown"
+                | 帐号管理
+                b.caret
+                ul.dropdown-menu
+                  - @user.platforms.each do |platform|
+                    li
+                      = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
+          ul.nav.navbar-nav.navbar-right
             li
-              a = link_to platform, '/bind/' + platform
-      .btn-group
-        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
-          | 获取新消息
-          span.caret
-        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
-          - @user.platforms.each do |platform|
-            li
-              a = link_to platform.name + '（' + platform.kind + '）', '/receive/' + platform.id.to_s
-      .btn-group
-        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
-          | 刷新联系人
-          span.caret
-        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
-          - @user.platforms.each do |platform|
-            li
-              a = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
-      .btn-group
-        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
-          | 发送消息
-          span.caret
-        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
-          - @user.contacts.each do |contact|
-            - contact.contact_items.each do |item|
-              li
-                a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
-    .row
-      .col-lg-6
-        .input-group
-          textarea.form-control type="text" 
-          span.input-group-btn 
-            button.btn.btn-default type="button" 发送
-    .jumbotron
-      p 这是对话框
-    .btn-group-vertical
-      - @user.contacts.each do |contact|
-        - if contact.contact_items.size == 1
-          button.btn.btn-default type="button" 
-            a tabindex="-1" = link_to contact.name, '/send/' + contact.contact_items[0].id.to_s
-        - else
-          - if contact.contact_items.size > 1
-            .btn-group.dropdown
-              button.btn.btn-default.dropdown-toggle data-toggle="dropdown" type="button"
-                | #{contact.name}
-                span.caret
-              ul.dropdown-menu aria-lableledby="dLabel" role="menu"
-                - contact.contact_items.each do |item|
+              a href="/users/#{@user.id}/edit" = @user.name
+
+    .container.main-container
+      .row
+        .col-md-4
+          #tree.well.tree
+            ul
+              - @user.contacts.each do |contact|
+                - if contact.contact_items.size > 1
                   li
-                    a = link_to item.platform.kind, '/send/' + item.id.to_s
+                    span.tree-node
+                      span.glyphicon.glyphicon-plus
+                      = contact.name
+                    ul
+                      - contact.contact_items.each do |item|
+                        li
+                          span.tree-node.leaf-node id="#{item.id}"
+                            i.icon-minus-sign
+                            = item.platform.kind
+                          |   
+                          = item.name
+                - else
+                  - if contact.contact_items.size == 1
+                    li
+                      span.tree-node.leaf-node id="#{contact.contact_items[0].id}"
+                        = contact.name
+                      |  
+                      = contact.contact_items[0].platform.kind
 
+        .col-md-8
+          ul.nav.nav-tabs#message-tab
+            li
+              a data-toggle="tab" href="#home"  Home
+          .tab-content#message-pool
+            #home.tab-pane.fade.in.active.scroll 
+                - (0..100).each do |i|
+                  p
+                    = link_to 'abc', 'def'
+                    |  Hello
+          .input-group
+            input.form-control type="text"
+            span.input-group-btn.dropup
+              button.btn.btn-default type="button" 发送
+              button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+                span.caret
+                span.sr-only 平台
+              ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+                li
+                  a = link_to '人人', '/users/get_all.json'
+                li
+                  a = link_to '微博', '/platforms/get.json'
 
-    #accordion.button-group-vertical
-      .panel.panel-default
-        .panel-heading
-          h4.panel-title
-            a data-parent="#accordion" data-toggle="collapse" href="#collapseOne"
-              | Hello
-        #collapseOne.panel-collapse.collapse.in
-          .panel-body
-            | Hello
-      .panel.panel-default
-        .panel-heading
-          h4.panel-title
-            a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo"
-              | Hello
-        #collapseTwo.panel-collapse.collapse.in
-          .panel-body
-            | Hello

@@ -1,0 +1,293 @@
+html lang="zh-cn" 
+  head
+    meta charset="utf-8" 
+    meta content="IE=edge" http-equiv="X-UA-Compatible" 
+    meta content="width=device-width, initial-scale=1.0" name="viewport" 
+    meta content="" name="description" 
+    meta content="" name="author" 
+    title Starter Template for Bootstrap
+    /! Bootstrap core CSS
+    link href="/assets/bootstrap.css" rel="stylesheet" 
+    /! Custom styles for this template
+    link href="/assets/starter-template.css" rel="stylesheet" 
+    /! Just for debugging purposes. Don't actually copy this line!
+    /![if lt IE 9] <script src="assets/ie8-responsive-file-warning.js"></script>
+    /! HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+    /![if lt IE 9]
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+  body
+    h1
+      | Hello, 
+      = @user.name
+    .btn-group
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 用户数据
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          li
+            a = link_to '全部数据', '/users/get_all.json'
+          li
+            a = link_to '平台数据', '/platforms/get.json'
+          li
+            a = link_to '联系人数据', '/contacts/get.json'
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 添加平台
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - Platform.supported.each do |platform|
+            li
+              a = link_to platform, '/bind/' + platform
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 获取新消息
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.platforms.each do |platform|
+            li
+              a = link_to platform.name + '（' + platform.kind + '）', '/receive/' + platform.id.to_s
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 刷新联系人
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.platforms.each do |platform|
+            li
+              a = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
+      .btn-group
+        button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
+          | 发送消息
+          span.caret
+        ul.dropdown-menu aria-labelledby="dLabel" role="menu"
+          - @user.contacts.each do |contact|
+            - contact.contact_items.each do |item|
+              li
+                a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
+    .row
+      .col-lg-6
+        .input-group
+          textarea.form-control type="text" 
+          span.input-group-btn 
+            button.btn.btn-default type="button" 发送
+    .jumbotron
+      p 这是对话框
+    .btn-group-vertical
+      - @user.contacts.each do |contact|
+        - if contact.contact_items.size == 1
+          button.btn.btn-default type="button" 
+            a tabindex="-1" = link_to contact.name, '/send/' + contact.contact_items[0].id.to_s
+        - else
+          - if contact.contact_items.size > 1
+            .btn-group.dropdown
+              button.btn.btn-default.dropdown-toggle data-toggle="dropdown" type="button"
+                | #{contact.name}
+                span.caret
+              ul.dropdown-menu aria-lableledby="dLabel" role="menu"
+                - contact.contact_items.each do |item|
+                  li
+                    a = link_to item.platform.kind, '/send/' + item.id.to_s
+
+
+    #accordion.button-group-vertical
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title
+            a data-parent="#accordion" data-toggle="collapse" href="#collapseOne"
+              | Hello
+        #collapseOne.panel-collapse.collapse.in
+          .panel-body
+            | Hello
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title
+            a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo"
+              | Hello
+        #collapseTwo.panel-collapse.collapse.in
+          .panel-body
+            | Hello
+.tree.well
+  ul
+    li
+      span
+        i.icon-folder-open
+        | Parent
+      a href=""  Goes somewhere
+      ul
+        li
+          span
+            i.icon-minus-sign
+            | Child
+          a href=""  Goes somewhere
+          ul
+            li
+              span
+                i.icon-leaf
+                | Grand Child
+              a href=""  Goes somewhere
+        li
+          span
+            i.icon-minus-sign
+            | Child
+          a href=""  Goes somewhere
+          ul
+            li
+              span
+                i.icon-leaf
+                | Grand Child
+              a href=""  Goes somewhere
+            li
+              span
+                i.icon-minus-sign
+                | Grand Child
+              a href=""  Goes somewhere
+              ul
+                li
+                  span
+                    i.icon-minus-sign
+                    | Great Grand Child
+                  a href=""  Goes somewhere
+                  ul
+                    li
+                      span
+                        i.icon-leaf
+                        | Great great Grand Child
+                      a href=""  Goes somewhere
+                    li
+                      span
+                        i.icon-leaf
+                        | Great great Grand Child
+                      a href=""  Goes somewhere
+                li
+                  span
+                    i.icon-leaf
+                    | Great Grand Child
+                  a href=""  Goes somewhere
+                li
+                  span
+                    i.icon-leaf
+                    | Great Grand Child
+                  a href=""  Goes somewhere
+            li
+              span
+                i.icon-leaf
+                | Grand Child
+              a href=""  Goes somewhere
+    li
+      span
+        i.icon-folder-open
+        | Parent2
+      a href=""  Goes somewhere
+      ul
+        li
+          span
+            i.icon-leaf
+            | Child
+          a href=""  Goes somewhere
+.tree
+  ul
+    li
+      span
+        i.icon-calendar
+        | 2013, Week 2
+      ul
+        li
+          span.badge.badge-success
+            i.icon-minus-sign
+            | Monday, January 7: 8.00 hours
+          ul
+            li
+              a href="" 
+                span
+                  i.icon-time
+                  | 8.00
+                | \&ndash; Changed CSS to accomodate...
+        li
+          span.badge.badge-success
+            i.icon-minus-sign
+            | Tuesday, January 8: 8.00 hours
+          ul
+            li
+              span
+                i.icon-time
+                | 6.00
+              | \&ndash;
+              a href=""  Altered code...
+            li
+              span
+                i.icon-time
+                | 2.00
+              | \&ndash;
+              a href=""  Simplified our approach to...
+        li
+          span.badge.badge-warning
+            i.icon-minus-sign
+            | Wednesday, January 9: 6.00 hours
+          ul
+            li
+              a href="" 
+                span
+                  i.icon-time
+                  | 3.00
+                | \&ndash; Fixed bug caused by...
+            li
+              a href="" 
+                span
+                  i.icon-time
+                  | 3.00
+                | \&ndash; Comitting latest code to Git...
+        li
+          span.badge.badge-important
+            i.icon-minus-sign
+            | Wednesday, January 9: 4.00 hours
+          ul
+            li
+              a href="" 
+                span
+                  i.icon-time
+                  | 2.00
+                | \&ndash; Create component that...
+    li
+      span
+        i.icon-calendar
+        | 2013, Week 3
+      ul
+        li
+          span.badge.badge-success
+            i.icon-minus-sign
+            | Monday, January 14: 8.00 hours
+          ul
+            li
+              span
+                i.icon-time
+                | 7.75
+              | \&ndash;
+              a href=""  Writing documentation...
+            li
+              span
+                i.icon-time
+                | 0.25
+              | \&ndash;
+              a href=""  Reverting code back to...
+
+.container
+  ul.nav.nav-tabs
+    li
+      a data-toggle="tab" href="#home"  Home
+    li
+      a data-toggle="tab" href="#profile"  Profile
+    li
+      a data-toggle="tab" href="#messages"  Messages
+    li
+      a data-toggle="tab" href="#settings"  Settings
+  .tab-content
+    #home.tab-pane.fade.in.active 
+      p 1234
+    #profile.tab-pane.fade 
+      p asdf
+    #messages.tab-pane.fade 
+      p qwer
+    #settings.tab-pane.fade 
+      p zxcv
+
