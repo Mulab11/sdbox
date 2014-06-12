@@ -10,6 +10,7 @@ class PlatformRenrenController < ApplicationController
   }
   @@RENREN_ACCESS_TOKEN = 'https://graph.renren.com/oauth/token'
   @@RENREN_AUTH_URL = 'https://graph.renren.com/oauth/authorize'
+  @@RENREN_FRIEND_LIST = 'https://api.renren.com/v2/user/friend/list'
 
   def bind
     authorize_url = @@RENREN_AUTH_URL.clone
@@ -38,6 +39,7 @@ class PlatformRenrenController < ApplicationController
 
       user = token_json['user']
       puts user['name']
+      puts user['id'].to_s
       entry = Platform.where(:kind => 'renren', :uid => user['id'].to_s)
       if entry.length == 0
         puts "new platform"
@@ -48,10 +50,35 @@ class PlatformRenrenController < ApplicationController
     redirect_to '/'
   end
   
-  def receive
+  def fresh
+    platform = Platform.find(params[:platform])
+    token_json = JSON.parse(platform.token)
+    
+    puts platform.uid
+    params = {:access_token => token_json['access_token'], :userId => platform.uid.to_i, :pageSize => 100, :pageNumber => 1}
+    uri = URI(@@RENREN_FRIEND_LIST)
+    uri.query = URI.encode_www_form(params)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true if uri.scheme == 'https'
+    request = Net::HTTP::get_response(uri)
+    friend_list = request.body
+    friend_list_json = JSON.parse(friend_list)
+
+    friends = friend_list_json['response']
+    @friends = []
+    friends.each do |friend|
+      entry = ContactItem.where(:name => friend['name'], :address => friend['id'])
+      if entry.length == 0
+        @friends.push({:name => friend['name'], :address => friend['id']})
+      end
+    end
+
+    items = @friends.map {|friend| ContactItem.new(friend)}
+    platform.add_items(items)
+    redirect_to '/users/get_all.json'
   end
   
-  def fresh
+  def receive
   end
   
   def send_message

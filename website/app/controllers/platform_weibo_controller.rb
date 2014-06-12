@@ -80,7 +80,7 @@ class PlatformWeiboController < ApplicationController
         @friends.push({:name => friend['name'], :address => friend['id']})
       end
     end
-    items = @friends.map {|friend| ContractItem.new(friend)}
+    items = @friends.map {|friend| ContactItem.new(friend)}
     platform.add_items(items)
     redirect_to '/users/get_all.json'
   end
