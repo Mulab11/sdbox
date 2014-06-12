@@ -38,4 +38,18 @@ class MainController < ApplicationController
     @item = ContactItem.find(params[:id])
     render '/main/send'
   end
+
+  def test
+    if not session[:user]
+      respond_to do |format|
+        format.html { redirect_to '/users/login_page' }
+      end
+      return
+    end
+    @user = User.find(session[:user])
+  end
+
+  def fonts
+    redirect_to "/assets/#{params[:addr]}"
+  end
 end

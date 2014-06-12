@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   get 'send/:id' => 'main#send_page'
   post 'send/:id' => 'main#send_message'
 
+  get 'test/' => 'main#test'
+  get 'fonts/:addr' => 'main#fonts'
+
   root 'main#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

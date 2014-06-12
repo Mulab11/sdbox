@@ -54,6 +54,7 @@ html lang="zh-cn"
           - contact.contact_items.each do |item|
             li
               a = link_to contact.name + '/' + item.name + '（' + item.platform.kind + '/' + item.platform.name + '）', '/send/' + item.id.to_s
+    #tree
     script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js" 
     script src="/assets/bootstrap.min.js" 
     script src="/assets/hello.js"
