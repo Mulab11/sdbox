@@ -4,11 +4,9 @@
 
 items = []
 user = []
-
 current_id = -1
 
 $(document).ready ->
-  $("#home").draggable()
   $(".tree li:has(ul)").addClass("parent_li").find(" > span").attr "title", "Collapse this branch"
   $(".tree li.parent_li > span").on "click", (e) ->
     children = $(this).parent("li.parent_li").find(" > ul > li")
