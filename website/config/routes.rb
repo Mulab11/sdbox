@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :messages
+
   resources :contact_items
 
   get 'contacts/get' => 'contacts#get'

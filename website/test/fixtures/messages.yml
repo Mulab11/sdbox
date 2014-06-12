@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  contact_item_id: MyString
+  receive_time: 2014-06-11 18:42:20
+  status: 
+  full_text: MyString
+
+two:
+  contact_item_id: MyString
+  receive_time: 2014-06-11 18:42:20
+  status: 
+  full_text: MyString

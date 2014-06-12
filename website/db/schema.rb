@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140421153836) do
+ActiveRecord::Schema.define(version: 20140611104827) do
 
   create_table "contact_items", force: true do |t|
     t.string   "address",     null: false
@@ -29,6 +29,15 @@ ActiveRecord::Schema.define(version: 20140421153836) do
     t.datetime "updated_at"
   end
 
+  create_table "messages", force: true do |t|
+    t.string   "contact_item_id"
+    t.datetime "receive_time"
+    t.integer  "status"
+    t.string   "full_text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "platforms", force: true do |t|
     t.string   "kind",       null: false
     t.string   "token"
@@ -36,6 +45,7 @@ ActiveRecord::Schema.define(version: 20140421153836) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uid"
   end
 
   create_table "users", force: true do |t|
