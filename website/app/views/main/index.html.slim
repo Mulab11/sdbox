@@ -57,13 +57,12 @@ html lang="zh-cn"
                 - if contact.contact_items.size > 1
                   li
                     span.tree-node
-                      span.glyphicon.glyphicon-plus
+                      span.glyphicon.glyphicon-minus
                       = contact.name
                     ul
                       - contact.contact_items.each do |item|
                         li
                           span.tree-node.leaf-node id="#{item.id}"
-                            i.icon-minus-sign
                             = item.platform.kind
                           |   
                           = item.name
@@ -78,17 +77,17 @@ html lang="zh-cn"
         .col-md-8
           ul.nav.nav-tabs#message-tab
             li
-              a data-toggle="tab" href="#home"  Home
+              a data-toggle="tab" href="#home" id="title-home" Home
           .tab-content#message-pool
             #home.tab-pane.fade.in.active.scroll 
-                - (0..100).each do |i|
-                  p
-                    = link_to 'abc', 'def'
-                    |  Hello
+              - (0..100).each do |i|
+                p
+                  = link_to 'abc', 'def'
+                  |  Hello
           .input-group
-            input.form-control type="text"
+            input.form-control#message-input type="text"
             span.input-group-btn.dropup
-              button.btn.btn-default type="button" 发送
+              button.btn.btn-default#send type="button" 发送
               button.btn.btn-default.dropdown-toggle type="button" id="dropdown-getdata" data-toggle="dropdown"
                 span.caret
                 span.sr-only 平台
