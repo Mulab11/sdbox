@@ -82,7 +82,7 @@ class PlatformWeiboController < ApplicationController
     end
     items = @friends.map {|friend| ContactItem.new(friend)}
     platform.add_items(items)
-    redirect_to '/users/get_all.json'
+    redirect_to '/'
   end
   
   def receive
