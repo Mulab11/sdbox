@@ -6,7 +6,7 @@ class PlatformWeiboController < ApplicationController
   @@WEIBO_ENV = {
     'APP_ID' => '1916610325',
     'APP_SECRET' => 'ff35f64cf73286a73a55216aca965983',
-    'REDIRECT_URI' => 'http://mulab.me:4321/access_token/weibo/'
+    'REDIRECT_URI' => 'http://mulab.me:1234/access_token/weibo/'
   }
   @@WEIBO_ACCESS_TOKEN = 'https://api.weibo.com/oauth2/access_token'
   @@WEIBO_AUTH_URL = 'https://api.weibo.com/oauth2/authorize'
@@ -86,41 +86,9 @@ class PlatformWeiboController < ApplicationController
   end
   
   def receive
-    platform = Platform.find(params[:platform])
-    token_json = JSON.parse(platform.token)
-    puts token_json['access_token']
-    
-    params = {:access_token => token_json['access_token'],
-              :since_id => 0,
-              :max_id => 0,
-              :count => 50, :page => 1,
-              #:filter_by_author => 0,
-              :filter_by_source => 0}
-    uri = URI(@@WEIBO_COMMENTS_TIMELINE)
-    uri.query = URI.encode_www_form(params)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    request = Net::HTTP::get_response(uri)
-    statuses_friends_timeline = request.body
-    statuses_friends_timeline_json = JSON.parse(statuses_friends_timeline)
-    puts statuses_friends_timeline_json
-    @messages = statuses_friends_timeline_json
   end
   
   def send_message
-    platform = Platform.find(params[:platform])
-    token_json = JSON.parse(platform.token)
-    puts token_json['access_token']
-    
-    params = {:access_token => token_json['access_token'], :since_id => 0, :max_id => 0, :count => 20, :page => 1, :base_app => 0, :feature => 0, :trim_status => 0}
-    uri = URI(@@WEIBO_FRIENDSHIPS_FRIENDS)
-    uri.query = URI.encode_www_form(params)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    request = Net::HTTP::get_response(uri)
-    friendships_friends = request.body
-    friendships_friends_json = JSON.parse(friendships_friends)
-    puts friendships_friends_json  
   end
 end
 

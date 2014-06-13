@@ -6,7 +6,7 @@ class PlatformRenrenController < ApplicationController
     'APP_ID' => '268863',
     'API_KEY' => 'c7ae949cd5194dccb5b4d11e0e9d0432',
     'SECRET_KEY' => '3836a8ef933d4cbc935b2e3e442e46ca',
-    'REDIRECT_URI' => 'http://mulab.me:4321/access_token/renren/'
+    'REDIRECT_URI' => 'http://mulab.me:1234/access_token/renren/'
   }
   @@RENREN_ACCESS_TOKEN = 'https://graph.renren.com/oauth/token'
   @@RENREN_AUTH_URL = 'https://graph.renren.com/oauth/authorize'
