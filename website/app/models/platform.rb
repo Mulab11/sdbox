@@ -5,7 +5,7 @@ class Platform < ActiveRecord::Base
 
   @@supp = ['test', 'renren', 'weixin', 'weibo']
   @@chn = {
-    'test' => '测试',
+    'test' => 'SD-BOX',
     'renren' => '人人',
     'weixin' => '微信',
     'weibo' => '微博'

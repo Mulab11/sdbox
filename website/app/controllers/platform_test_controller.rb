@@ -12,6 +12,7 @@ class PlatformTestController < ApplicationController
   def bind
     tks = @@friends.map{|k,v| k}
     @platform = Platform.new(:token => tks[rand(tks.size)], :kind => 'test', :user_id => session[:user])
+    #redirect_to '/'
   end
 
   def fresh
@@ -19,7 +20,7 @@ class PlatformTestController < ApplicationController
     friend = @@friends[platform.token]
     items = friend.map{ |name| ContactItem.new(:name => name, :address => name)}
     platform.add_items(items)
-    redirect_to '/users/get_all.json'
+    redirect_to '/'
   end
 
   def self.receive(platform)

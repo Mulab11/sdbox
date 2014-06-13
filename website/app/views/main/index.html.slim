@@ -5,7 +5,7 @@ html lang="zh-cn"
     meta content="width=device-width, initial-scale=1.0" name="viewport" 
     meta content="" name="description" 
     meta content="" name="author" 
-    title Starter Template for Bootstrap
+    title SD-BOX
     /! Bootstrap core CSS
     link href="/assets/bootstrap.css" rel="stylesheet" 
     /! Custom styles for this template
@@ -35,7 +35,7 @@ html lang="zh-cn"
                 ul.dropdown-menu
                   - Platform.supported.each do |platform|
                     li
-                      = link_to platform, '/bind/' + platform
+                      = link_to Platform.chinese[platform], '/bind/' + platform
             li.dropdown
               a.dropdown-toggle data-toggle="dropdown"
                 | 帐号管理
@@ -43,7 +43,7 @@ html lang="zh-cn"
                 ul.dropdown-menu
                   - @user.platforms.each do |platform|
                     li
-                      = link_to platform.name + '（' + platform.kind + '）', '/fresh/' + platform.id.to_s
+                      = link_to platform.name + '（' + Platform.chinese[platform.kind] + '）', '/fresh/' + platform.id.to_s
           ul.nav.navbar-nav.navbar-right
             li
               a href="/users/#{@user.id}/edit" = @user.name

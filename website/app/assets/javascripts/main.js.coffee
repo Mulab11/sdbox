@@ -23,6 +23,7 @@ badgeFresh = (id) ->
     $("#badge-title-#{id}").html items[id].cnt
   else
     $("#badge-#{id}").remove()
+    $("#badge-title-#{id}").remove()
 
 printCurrent = ->
   if current_id == -1
@@ -31,34 +32,47 @@ printCurrent = ->
   items[current_id].cnt = 0
   badgeFresh(current_id)
   current = buff[current_id]
-  for id of buff[current_id]
-    keys.push(id)
-  keys.sort()
-  for cnt of keys
-    id = keys[cnt]
+  #console.log(current)
+  if current == undefined
+    return
+  current.sort (a,b) ->
+    #console.log(a)
+    #console.log(b)
+    if a.receive_time < b.receive_time
+      return -1
+    if a.receive_time > b.receive_time
+      return 1
+    return 0
+  for cnt of current
+    id = current[cnt].contact_item_id
     #console.log(id)
     #console.log(items[current_id])
-    printMessage(current_id, user.contacts[items[current_id].contact_id].name, Date(id), current[id])
+    printMessage(current_id, user.contacts[items[current_id].contact_id].name, Date(current[cnt].receive_time), current[cnt].full_text)
   delete buff[current_id]
 
 timerFunc = ->
   #console.log("tick")
   $.get "/receive", (data, status)->
+    hasNew = false
     for message_id of data
+      hasNew = true
       message = data[message_id]
       #console.log message
       id = message.contact_item_id
       #console.log(id)
       if buff[id] == undefined
-        buff[id] = {}
-      buff[id][message.receive_time] = message.full_text
+        buff[id] = []
+      buff[id].push message
       #console.log(buff[id])
       items[id].cnt += 1
       #console.log(items[id].cnt)
       badgeFresh(id)
       #console.log(buff)
     printCurrent()
-  timer = setTimeout(timerFunc, 10000)
+    #if hasNew
+    #  $('embed').remove()
+    #  $('body').append('<embed src="/assets/notify.wav" autostart="true" hidden="true" loop="false" />')
+  timer = setTimeout(timerFunc, 5000)
 
 messageResize = ->
   $(".tab-content").height($(".col-md-8").height() - $(".input-group").height() - $(".nav-tabs").height() - 20)
@@ -76,6 +90,9 @@ treeInit = ->
     e.stopPropagation()
 
 sendInit = ->
+  $("#message-input").keydown (e)->
+    if e.keyCode == 13
+      $("#send").click()
   $("#send").click ->
     if current_id == -1 or $("#message-input").val() == ""
       return
@@ -83,18 +100,18 @@ sendInit = ->
     printMessage(current_id, "我", new Date(), message)
     div = $("#tab-#{current_id}")
     div.scrollTop(div[0].scrollHeight)
-    console.log(div)
+    #console.log(div)
     $("#message-input").val("")
     $.post "/send/#{current_id}.json",
       message: message
     ,(data, status)->
-      console.log(data)
+      #console.log(data)
       if status != "success" or data.result != "success"
         alert("“#{message}”发送失败")
 
 userInit = ->
   $.get "/users/get_all.json", (data, status)->
-    console.log(status)
+    #console.log(status)
     user = data
     for contact_id of data.contacts
       contact = data.contacts[contact_id]
@@ -116,7 +133,7 @@ userInit = ->
           current_id = id
           printCurrent()
       $("#title-#{id}").click()
-    console.log(user)
+      #console.log(user)
 
 homeInit = ->
   $("#title-home").click ->

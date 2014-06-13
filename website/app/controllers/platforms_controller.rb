@@ -39,7 +39,7 @@ class PlatformsController < ApplicationController
     @platform = Platform.new(platform_params)
     respond_to do |format|
       if @platform.save
-        format.html { redirect_to @platform, notice: 'Platform was successfully created.' }
+        format.html { redirect_to '/', notice: 'Platform was successfully created.' }
         format.json { render :show, status: :created, location: @platform }
       else
         format.html { render :new }
