@@ -5,8 +5,65 @@
 items = []
 user = []
 current_id = -1
+timer = null
+buff = {}
 
-$(document).ready ->
+printMessage = (id, name, time, text) ->
+  div = $("#tab-#{id}")
+  div.append """<p>#{name}(#{time.toLocaleString()})<br>#{text}</p>"""
+
+badgeFresh = (id) ->
+  cnt = items[id].cnt
+  if cnt > 0
+    if $("#badge-#{id}").length == 0
+      $(".tree-node##{id}").append """<span class="badge" id="badge-#{id}">0</span>"""
+      if $("#title-#{id}").length != 0
+        $("#title-#{id}").prepend """<span class="badge" id="badge-title-#{id}">0</span>"""
+    $("#badge-#{id}").html items[id].cnt
+    $("#badge-title-#{id}").html items[id].cnt
+  else
+    $("#badge-#{id}").remove()
+
+printCurrent = ->
+  if current_id == -1
+    return
+  keys = []
+  items[current_id].cnt = 0
+  badgeFresh(current_id)
+  current = buff[current_id]
+  for id of buff[current_id]
+    keys.push(id)
+  keys.sort()
+  for cnt of keys
+    id = keys[cnt]
+    #console.log(id)
+    #console.log(items[current_id])
+    printMessage(current_id, user.contacts[items[current_id].contact_id].name, Date(id), current[id])
+  delete buff[current_id]
+
+timerFunc = ->
+  #console.log("tick")
+  $.get "/receive", (data, status)->
+    for message_id of data
+      message = data[message_id]
+      #console.log message
+      id = message.contact_item_id
+      #console.log(id)
+      if buff[id] == undefined
+        buff[id] = {}
+      buff[id][message.receive_time] = message.full_text
+      #console.log(buff[id])
+      items[id].cnt += 1
+      #console.log(items[id].cnt)
+      badgeFresh(id)
+      #console.log(buff)
+    printCurrent()
+  timer = setTimeout(timerFunc, 10000)
+
+messageResize = ->
+  $(".tab-content").height($(".col-md-8").height() - $(".input-group").height() - $(".nav-tabs").height() - 20)
+
+treeInit = ->
   $(".tree li:has(ul)").addClass("parent_li").find(" > span").attr "title", "Collapse this branch"
   $(".tree li.parent_li > span").on "click", (e) ->
     children = $(this).parent("li.parent_li").find(" > ul > li")
@@ -17,26 +74,34 @@ $(document).ready ->
       children.show "fast"
       $(this).attr("title", "Collapse this branch").find(" > .glyphicon").addClass("glyphicon-minus").removeClass "glyphicon-plus"
     e.stopPropagation()
-  $(".tab-content").height($(".col-md-8").height() - $(".input-group").height() - $(".nav-tabs").height() - 20)
 
+sendInit = ->
   $("#send").click ->
     if current_id == -1 or $("#message-input").val() == ""
       return
+    message = $("#message-input").val()
+    printMessage(current_id, "我", new Date(), message)
     div = $("#tab-#{current_id}")
-    div.append("""<p>我(#{new Date().toLocaleString()})<br>#{$("#message-input").val()}</p>""")
     div.scrollTop(div[0].scrollHeight)
     console.log(div)
     $("#message-input").val("")
+    $.post "/send/#{current_id}.json",
+      message: message
+    ,(data, status)->
+      console.log(data)
+      if status != "success" or data.result != "success"
+        alert("“#{message}”发送失败")
 
+userInit = ->
   $.get "/users/get_all.json", (data, status)->
-    console.log(data)
+    console.log(status)
     user = data
     for contact_id of data.contacts
       contact = data.contacts[contact_id]
       for item_id of contact.items
         items[item_id] = contact.items[item_id]
         items[item_id]["contact_id"] = contact_id
-    console.log(items)
+      items[item_id].cnt = 0
     $(".leaf-node").click ->
       id = $(this).attr("id")
       if $("#tab-#{id}").length == 0
@@ -49,6 +114,22 @@ $(document).ready ->
           $("#tab-#{id}").remove()
         $("#title-#{id}").click ->
           current_id = id
+          printCurrent()
       $("#title-#{id}").click()
+    console.log(user)
+
+homeInit = ->
+  $("#title-home").click ->
+    current_id = -1
+
+$(document).ready ->
+  timer = setTimeout(timerFunc, 5000)
+  treeInit()
+  homeInit()
+  messageResize()
+  $(window).resize ->
+    messageResize()
+  sendInit()
+  userInit()
 
 

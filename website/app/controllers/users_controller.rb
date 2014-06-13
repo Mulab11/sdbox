@@ -87,7 +87,6 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.id
         session[:user] = @user.id
-        print('!!!!!!!!!!!!!!!!!session = ' + session[:user].to_s)
         format.html { redirect_to root_url, notice: 'Logged in!' }
         #format.json { render :show, status: :created, location: @user }
       else

@@ -22,14 +22,14 @@ Rails.application.routes.draw do
   resources :users
 
   Platform.supported.each do |platform|
-    get 'receive/' + platform => 'platform_' + platform + '#receive'
+    #get 'receive/' + platform => 'platform_' + platform + '#receive'
     get 'bind/' + platform => 'platform_' + platform + '#bind'
     get 'fresh/' + platform => 'platform_' + platform + '#fresh'
-    get 'send/' + platform => 'platform_' + platform + '#send_message'
+    #post 'send/' + platform => 'platform_' + platform + '#send_message'
     get 'access_token/' + platform => 'platform_' + platform + '#access_token'
   end
 
-  get 'receive/:id' => 'main#receive'
+  get 'receive/' => 'main#receive'
   get 'fresh/:id' => 'main#fresh'
   get 'send/:id' => 'main#send_page'
   post 'send/:id' => 'main#send_message'
