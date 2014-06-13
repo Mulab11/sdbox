@@ -7,6 +7,12 @@ user = []
 current_id = -1
 timer = null
 buff = {}
+link_id = -1
+chinese =
+  test: "SD-BOX"
+  renren: "人人"
+  weibo: "微博"
+  weixin: "微信"
 
 printMessage = (id, name, time, text) ->
   div = $("#tab-#{id}")
@@ -78,8 +84,9 @@ messageResize = ->
   $(".tab-content").height($(".col-md-8").height() - $(".input-group").height() - $(".nav-tabs").height() - 20)
 
 treeInit = ->
-  $(".tree li:has(ul)").addClass("parent_li").find(" > span").attr "title", "Collapse this branch"
-  $(".tree li.parent_li > span").on "click", (e) ->
+  $(".tree li:has(ul)").addClass("parent_li").find(" > .tree-node").attr "title", "Collapse this branch"
+  $(".tree li.parent_li > .tree-node").unbind()
+  $(".tree li.parent_li > .tree-node").on "click", (e) ->
     children = $(this).parent("li.parent_li").find(" > ul > li")
     if children.is(":visible")
       children.hide "fast"
@@ -107,23 +114,140 @@ sendInit = ->
     ,(data, status)->
       #console.log(data)
       if status != "success" or data.result != "success"
-        alert("“#{message}”发送失败")
+        alert "“#{message}”发送失败"
+
+treeNode = 0
+
+aloneInit = (id) ->
+  #console.log "aloneInit"
+  $("#item-#{id}").children(".glyphicon-open").click ->
+    #console.log "click"
+    $.get "/contact_items/alone/#{id}.json", (data, status)->
+      #console.log "get"
+      if status != "success"
+        return
+      #console.log "succ"
+      contact_id = items[id].contact_id
+      contact = user.contacts[contact_id]
+      delete contact.items[id]
+      $("#contact-#{contact_id}").remove()
+      data.items = {}
+      data.items[id] = items[id]
+      items[id].contact_id = data.id
+      console.log data
+      user.contacts[data.id] = data
+      treeNode contact_id, contact
+      if contact_id == link_id
+        linkCheck $("#contact-#{contact_id}").children(".link-icon"), true
+      treeNode data.id, data
+      treeInit()
+
+linkInit = 0
+
+treeNode = (id, contact) ->
+  cnt = 0
+  for i of contact.items
+    cnt += 1
+  console.log "id = #{id} cnt = #{cnt}"
+  if cnt > 1
+    $("#tree-base").append """
+      <li id="contact-#{id}">
+        <span class="tree-node">
+          <span class="glyphicon glyphicon-minus" />
+          #{contact.name}
+        </span>
+        <span class="glyphicon glyphicon-link link-icon" />
+        <ul></ul>
+      </li>
+    """
+    for i of contact.items
+      item = contact.items[i]
+      $("#contact-#{id}").children("ul").append """
+        <li id="item-#{i}">
+          <span class="tree-node leaf-node" id=#{i}>
+            #{chinese[user.platforms[contact.items[i].platform_id].kind]}
+          </span>
+          <span class="glyphicon glyphicon-open"/>
+          #{item.name}
+        </li>
+      """
+      aloneInit(i)
+  else if cnt == 1
+    for i of contact.items
+      console.log(i)
+      $("#tree-base").append """
+        <li id="contact-#{id}" id="item-#{i}">
+          <span class="tree-node leaf-node" id="#{i}">
+            #{contact.name}
+          </span>
+          <span class="glyphicon glyphicon-link link-icon" />
+          #{chinese[user.platforms[contact.items[i].platform_id].kind]}
+        </li>
+      """
+  linkInit id
+
+linkCheck = (div, status)->
+  if status
+    div.removeClass("glyphicon-link")
+    div.addClass("glyphicon-ok")
+  else
+    div.removeClass("glyphicon-ok")
+    div.addClass("glyphicon-link")
+
+linkInit = (contact_id)->
+  $("#contact-#{contact_id}").children(".link-icon").click ->
+    console.log "link_id = #{link_id} contact_id = #{contact_id}"
+    if link_id == -1
+      link_id = contact_id
+      linkCheck $(this), true
+      return
+    if link_id == contact_id
+      link_id = -1
+      linkCheck $(this), false
+      return
+    $.get "contacts/join?fath=#{link_id}&son=#{contact_id}"
+    , (data, status)->
+        if status != "success"
+          alert("合并失败")
+          return
+        $("#contact-#{contact_id}").remove()
+        $("#contact-#{link_id}").remove()
+        for item_id of user.contacts[contact_id].items
+          user.contacts[link_id].items[item_id] = user.contacts[contact_id].items[item_id]
+          items[item_id] = user.contacts[link_id].items[item_id]
+          items[item_id].contact_id = link_id
+        contact = user.contacts[link_id]
+        treeNode link_id, contact
+        linkCheck($("#contact-#{link_id}").children(".link-icon"), true)
+        treeInit()
 
 userInit = ->
   $.get "/users/get_all.json", (data, status)->
     #console.log(status)
     user = data
-    for contact_id of data.contacts
+    console.log(data)
+    for contact_id of user.contacts
       contact = data.contacts[contact_id]
       for item_id of contact.items
         items[item_id] = contact.items[item_id]
-        items[item_id]["contact_id"] = contact_id
-      items[item_id].cnt = 0
+        items[item_id].contact_id = contact_id
+        items[item_id].cnt = 0
+      treeNode contact_id, contact
     $(".leaf-node").click ->
       id = $(this).attr("id")
       if $("#tab-#{id}").length == 0
-        $("#message-tab").append("""<li><a data-toggle="tab" href="#tab-#{id}" id="title-#{id}">#{user.contacts[items[id].contact_id].name} <span class="glyphicon glyphicon-remove" id="exit-#{id}"></span></a></li>""")
-        $("#message-pool").append("""<div class="tab-pane fade scroll" id="tab-#{id}"></div>""")
+        $("#message-tab").append """
+          <li>
+            <a data-toggle="tab" href="#tab-#{id}" id="title-#{id}">
+              #{user.contacts[items[id].contact_id].name} 
+              <span class="glyphicon glyphicon-remove" id="exit-#{id}">
+              </span>
+            </a>
+          </li>
+        """
+        $("#message-pool").append """
+          <div class="tab-pane fade scroll" id="tab-#{id}"></div>
+        """
         $("#exit-#{id}").click ->
           if $("#tab-#{id}").hasClass("active")
             $("#title-home").click()
@@ -134,6 +258,7 @@ userInit = ->
           printCurrent()
       $("#title-#{id}").click()
       #console.log(user)
+    treeInit()
 
 homeInit = ->
   $("#title-home").click ->
@@ -141,12 +266,10 @@ homeInit = ->
 
 $(document).ready ->
   timer = setTimeout(timerFunc, 5000)
-  treeInit()
   homeInit()
   messageResize()
   $(window).resize ->
     messageResize()
   sendInit()
   userInit()
-
 

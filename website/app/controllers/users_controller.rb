@@ -69,6 +69,7 @@ class UsersController < ApplicationController
   end
 
   def login_page
+    session[:user] = nil
     @user = User.new
     @action = 'login'
   end
@@ -83,6 +84,7 @@ class UsersController < ApplicationController
       @user = User.new
       render :login_page
     end/
+    p "$$$$$$$$$$$$$$$#{@user.id}\n"
 
     respond_to do |format|
       if @user.id

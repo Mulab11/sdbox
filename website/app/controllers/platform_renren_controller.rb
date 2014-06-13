@@ -63,6 +63,7 @@ class PlatformRenrenController < ApplicationController
     request = Net::HTTP::get_response(uri)
     friend_list = request.body
     friend_list_json = JSON.parse(friend_list)
+    p friend_list_json
 
     friends = friend_list_json['response']
     @friends = []

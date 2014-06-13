@@ -38,27 +38,30 @@ html lang="zh-cn"
                       = link_to Platform.chinese[platform], '/bind/' + platform
             li.dropdown
               a.dropdown-toggle data-toggle="dropdown"
-                | 帐号管理
+                | 获取好友
                 b.caret
                 ul.dropdown-menu
                   - @user.platforms.each do |platform|
                     li
-                      = link_to platform.name + '（' + Platform.chinese[platform.kind] + '）', '/fresh/' + platform.id.to_s
+                      = link_to "#{platform.name}（#{Platform.chinese[platform.kind]}）", "/fresh/#{platform.id.to_s}"
           ul.nav.navbar-nav.navbar-right
             li
               a href="/users/#{@user.id}/edit" = @user.name
+            li
+              a href="/users/login_page" method="delete" 登出
 
     .container.main-container
       .row
         .col-md-4
           #tree.well.tree
-            ul
-              - @user.contacts.each do |contact|
+            ul#tree-base
+              /- @user.contacts.each do |contact|
                 - if contact.contact_items.size > 1
                   li
                     span.tree-node
                       span.glyphicon.glyphicon-minus
                       = contact.name
+                      span.glyphicon.glyphicon-link
                     ul
                       - contact.contact_items.each do |item|
                         li
@@ -71,6 +74,7 @@ html lang="zh-cn"
                     li
                       span.tree-node.leaf-node id="#{contact.contact_items[0].id}"
                         = contact.name
+                        span.glyphicon.glyphicon-link
                       = " #{Platform.chinese[contact.contact_items[0].platform.kind]}"
 
         .col-md-8

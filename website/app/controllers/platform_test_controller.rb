@@ -5,6 +5,18 @@ class PlatformTestController < ApplicationController
     'cxm' => ['ljn', 'hjx', 'zch'],
     'wjy' => ['zch', 'ljn', 'ssq']
   }
+  @@names = {
+    'cxm' => '陈许旻',
+    'zch' => '张晨晖',
+    'ljb' => '黎静北',
+    'flr' => '方凌锐',
+    'czt' => '陈子韬',
+    'wjy' => '王钧奕',
+    'ljn' => '梁健楠',
+    'stz' => '史天泽',
+    'hjx' => '扈吉星',
+    'ssq' => '孙思齐'
+  }
   @@sent = 0
   @@received = 1
   cattr_reader :sent, :received
@@ -18,7 +30,7 @@ class PlatformTestController < ApplicationController
   def fresh
     platform = Platform.find(params[:platform])
     friend = @@friends[platform.token]
-    items = friend.map{ |name| ContactItem.new(:name => name, :address => name)}
+    items = friend.map{ |name| ContactItem.new(:name => @@names[name], :address => name)}
     platform.add_items(items)
     redirect_to '/'
   end

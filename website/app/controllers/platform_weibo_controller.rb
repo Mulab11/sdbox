@@ -48,6 +48,7 @@ class PlatformWeiboController < ApplicationController
     p params[:uid]
     user_show = request.body
     user_show_json = JSON.parse(user_show)
+    p user_show_json
     
     entry = Platform.where(:kind => 'weibo', :uid => user_show_json['id'].to_s)
     if entry.length == 0

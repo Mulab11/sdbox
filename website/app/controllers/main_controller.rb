@@ -9,6 +9,7 @@ class MainController < ApplicationController
       end
       return
     end
+    p "@@@@@@@@@@@@@@@@@@@@@@@@@#{session[:user]}"
     @user = User.find(session[:user])
   end
 
@@ -21,6 +22,7 @@ class MainController < ApplicationController
   end
 
   def receive
+    p "@@@@@@@@@@@@@@@@@@@@@@@@@#{session[:user]}"
     user = User.find(session[:user])
     user.platforms.each do |platform|
       begin

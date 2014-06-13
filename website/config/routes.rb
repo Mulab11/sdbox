@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :messages
 
+  get 'contact_items/alone/:id' => 'contact_items#alone'
+
   resources :contact_items
 
   get 'contacts/get' => 'contacts#get'

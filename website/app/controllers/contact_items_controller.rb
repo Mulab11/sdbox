@@ -61,6 +61,15 @@ class ContactItemsController < ApplicationController
     end
   end
 
+  def alone
+    @item = ContactItem.find(params[:id])
+    @item.contact.destroy if @item.contact.contact_items.size == 1
+    @contact = Contact.new(:name => @item.name, :user_id => @item.platform.user_id)
+    @contact.save
+    @item.contact_id = @contact.id
+    @item.save
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_contact_item
