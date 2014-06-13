@@ -1,3 +1,5 @@
+require 'net/http'
+
 class MainController < ApplicationController
 
   def index
@@ -19,11 +21,18 @@ class MainController < ApplicationController
   end
 
   def receive
-    platform = Platform.find(params[:id])
-    if platform.user_id != session[:user]
-      return
+    user = User.find(session[:user])
+    user.platforms.each do |platform|
+      begin
+        eval("Platform" + "#{platform.kind}".humanize + "Controller").receive(platform)
+        rescue
+      end
     end
-    redirect_to :controller => 'platform_' + platform.kind, :action => 'receive', :format => 'json', :platform => platform
+    @messages = Message.where(:user => user, :status => Message.recv_unread)
+    @messages.each do |message|
+      message.status = Message.recv_read
+      message.save
+    end
   end
 
   def send_message
@@ -31,7 +40,9 @@ class MainController < ApplicationController
     if item.platform.user_id != session[:user]
       return
     end
-    redirect_to :controller => 'platform_' + item.platform.kind, :action => 'send_message', :contact_item => item, :message => params[:message]
+    eval("Platform" + "#{item.platform.kind}".humanize + "Controller").send_message(item, params[:message])
+    Message.new(:contact_item_id => item, :receive_time => Time.now, :status => Message.sent, :full_text => params[:message], :user_id => session[:user]).save
+    @res = "success"
   end
 
   def send_page

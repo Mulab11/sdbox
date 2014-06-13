@@ -71,8 +71,7 @@ html lang="zh-cn"
                     li
                       span.tree-node.leaf-node id="#{contact.contact_items[0].id}"
                         = contact.name
-                      |  
-                      = Platform.chinese[contact.contact_items[0].platform.kind]
+                      = " #{Platform.chinese[contact.contact_items[0].platform.kind]}"
 
         .col-md-8
           ul.nav.nav-tabs#message-tab
@@ -80,7 +79,8 @@ html lang="zh-cn"
               a data-toggle="tab" href="#home" id="title-home" Home
           .tab-content#message-pool
             #home.tab-pane.fade.in.active.scroll 
-              - (0..100).each do |i|
+              | 欢迎使用SD-BOX
+              /- (0..100).each do |i|
                 p
                   = link_to 'abc', 'def'
                   |  Hello

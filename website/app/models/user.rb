@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :platforms
   has_many :contacts
+  has_many :massages
   validates :name, uniqueness: true
   has_secure_password
   validates_presence_of :password, :on => :create
